@@ -1,6 +1,3 @@
-var header = {"Accept-Language":"hi_IN", 
-    "accept":"application/json",};
-
 function playAudio() { 
     var x = document.getElementById("myAudio");
     x.play(); 
@@ -10,7 +7,6 @@ function filterDistrict(){
     $.ajax({url: "https://cdn-api.co-vin.in/api/v2/admin/location/districts/"+$('#state').val(),
     type: "GET", 
     dataType: "json", 
-    headers: header,
     success: function(result){
         var district = $('#district');
         var html = $.map(result.districts, function(dist){
@@ -24,7 +20,6 @@ function loadStates(){
     $.ajax({url: "https://cdn-api.co-vin.in/api/v2/admin/location/states", 
     type: "GET", 
     dataType: "json", 
-    headers: header,
     success: function(result){
         var state = $('#state');
         var html = $.map(result.states, function(st){
@@ -33,23 +28,14 @@ function loadStates(){
         state.html(html)
     }});
 }
-$("button").click(function(){
-    // playAudio();
+
+function getResult(){
+    console.log("Button Clicked");
     var flag = false;
     var itr = 0;
     while(flag == false){
-        if(itr < 1000){
-            sleep(2000);
-            console.log(itr);
-            itr++;
-        }
-        else{
-            flag = true;
-        }
         $.ajax({url: "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id="+$('#district').val()+"&date=11-05-2021", 
-        headers: header,
         success: function(result){
-            
             console.log(result.centers.length);
             for(var i =0; i< result.centers.length; i++)
             {
@@ -66,13 +52,24 @@ $("button").click(function(){
                 }
                 
             }
-        if(flag == true){
-            playAudio();
+            if(flag == true){
+                playAudio();
+            }
+            else{
+                $("#div1").append("Still Waiting...");
+            }
+        }});
+        if(itr < 1000){
+            sleep(2000);
+            itr++;
         }
         else{
-            $("#div1").append("Still Waiting...");
+            flag = true;
         }
-        }});
     }
-});
+};
 
+function sleep(delay) {
+    var start = new Date().getTime();
+    while (new Date().getTime() < start + delay);
+}
