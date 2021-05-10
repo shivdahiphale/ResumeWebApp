@@ -29,39 +29,15 @@ function loadStates(){
     }});
 }
 
-function getResult(){
+async function getResult(){
     console.log("Button Clicked");
     var flag = false;
     var itr = 0;
     while(flag == false){
-        $.ajax({url: "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id="+$('#district').val()+"&date=11-05-2021", 
-        success: function(result){
-            console.log(result.centers.length);
-            for(var i =0; i< result.centers.length; i++)
-            {
-                for(var j=0; j< result.centers[i].sessions.length; j++){
-                    if(result.centers[i].sessions[j].available_capacity > 0 && result.centers[i].sessions[j].min_age_limit == $('#age').val()){
-                        $("#div1").append("<p> <b>Date: </b>"+result.centers[i].date
-                        +" <b>Hospital: </b>"+result.centers[i].name
-                        +" <b>Quantity: </b> "+ result.centers[i].sessions[j].available_capacity
-                        +" <b>Vaccine: </b> "+ result.centers[i].sessions[j].vaccine
-                        +" <b>Age Limit: </b> "+ result.centers[i].sessions[j].min_age_limit
-                        +"</p>");
-                        flag = true;
-                    }
-                }
-                
-            }
-            if(flag == true){
-                playAudio();
-            }
-            else{
-                $("#div1").append("Still Waiting...");
-            }
-        }});
-        if(itr < 1000){
-            sleep(2000);
+        flag = await callAPI();
+        if(itr < 500){
             itr++;
+            await sleep(30000);
         }
         else{
             flag = true;
@@ -69,7 +45,36 @@ function getResult(){
     }
 };
 
-function sleep(delay) {
-    var start = new Date().getTime();
-    while (new Date().getTime() < start + delay);
+async function callAPI(){
+    console.log("API Call:");
+    var countFlag = false;
+    await $.ajax({url: "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id="+$('#district').val()+"&date=11-05-2021", 
+    success: function(result){
+        console.log(result.centers.length);
+        for(var i =0; i< result.centers.length; i++)
+        {
+            for(var j=0; j< result.centers[i].sessions.length; j++){
+                if(result.centers[i].sessions[j].available_capacity > 0 && result.centers[i].sessions[j].min_age_limit == $('#age').val()){
+                    $("#div1").append("<p> <b>Date: </b>"+result.centers[i].date
+                    +" <b>Hospital: </b>"+result.centers[i].name
+                    +" <b>Quantity: </b> "+ result.centers[i].sessions[j].available_capacity
+                    +" <b>Vaccine: </b> "+ result.centers[i].sessions[j].vaccine
+                    +" <b>Age Limit: </b> "+ result.centers[i].sessions[j].min_age_limit
+                    +"</p>");
+                    countFlag = true;
+                }
+            }
+        }
+        if(countFlag == true){
+            playAudio();
+        }
+        else{
+            $("#div1").append("<p>Still Waiting...</p>");
+        }
+    }});
+    return countFlag;
 }
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
