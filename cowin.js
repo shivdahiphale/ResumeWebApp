@@ -30,7 +30,6 @@ function loadStates(){
 }
 
 async function getResult(){
-    console.log("Button Clicked");
     var flag = false;
     var itr = 0;
     while(flag == false){
@@ -48,7 +47,10 @@ async function getResult(){
 async function callAPI(){
     console.log("API Call:");
     var countFlag = false;
-    await $.ajax({url: "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id="+$('#district').val()+"&date=11-05-2021", 
+    var d = new Date();
+    var month = d.getMonth()+1;
+    var today = d.getDate()+"-"+month+"-"+d.getFullYear();
+    await $.ajax({url: "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id="+$('#district').val()+"&date="+today, 
     success: function(result){
         console.log(result.centers.length);
         for(var i =0; i< result.centers.length; i++)
