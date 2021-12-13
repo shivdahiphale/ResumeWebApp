@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="main.js"></script>
+  <title>TRIRIGA Profile Upload</title>
+</head>
+
+<body>
+  <h3>User Form</h3>
+  <div class="container">
+    <form>
+
+      <label for="formFile">Profile Image</label>
+      <input class="form-control" type="file" id="formFile">
+
+      <label for="selectUser" class="col-sm-2 col-form-label">User</label>
+      <select class="form-select" aria-label="Default select example" id="selectUser">
+      </select>
+
+      <button type="submit" onclick="upload()" class="btn btn-primary">Upload</button>
+    </form>
+  </div>
+</body>
+
+</html>
